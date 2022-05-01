@@ -28,6 +28,10 @@ async function currentWeather(location) {
     var humidityEl = document.createElement('p')
     humidityEl.innerHTML = `Humidity: ${data.main.humidity} %`
     stateBoxEl.appendChild(humidityEl)
+   // need a function to clear old results on page and put new results in place of it
+   Btn.addEventListener('click', function () {
+    stateBoxEl.innerHTML = '';
+})
 }
 //use one call api for UV index
 
@@ -38,6 +42,5 @@ function searchBtn() {
   console.log(userInput)
   currentWeather(userInput)
 }
-
 
 Btn.addEventListener("click", searchBtn);
