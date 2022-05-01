@@ -4,18 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="Stylesheet" href="/assets/style.css">
+    <title>Weather Dashboard</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
 </head>
 <body>
     <header>
-        Weather Dashboard
+        <div class="heading">
+         <div class="weatherDash">
+            <h1>Weather Dashboard</h1>
+         </div>
+        </div>
+        <div class="city-search">
+            <label for="Search"> Search For City:</label>  
+            <input type="text" class="user-input" placeholder="City">
+            <button class="searchbtn">Search</button>
+          </div>
     </header>
+    <!-- This will be the container to display city and date info -->
   <div class="state-box"></div>
-  <div class="forecast"></div>
-  <div class="city-search">
-      <input type="text" class="user-input" placeholder="Search">
-      <button class="searchbtn">Search</button>
+  <!-- This will be the container display for 5 day forecast -->
+  <div class="five-day-forecast">
+      <h3>5-Day Forecast:</h3>
   </div>
-  <script src="./script.js"></script>
+  <script src="/assets/script.js"></script>
 </body>
 </html>
