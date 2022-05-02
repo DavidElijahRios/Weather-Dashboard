@@ -3,13 +3,20 @@ var Btn = document.querySelector(".searchbtn");
 var stateBoxEl = document.querySelector(".state-box");
 var forecast = document.querySelector(".five-day-forecast");
 
+localStorage.setItem("happy","bye")
+console.log(localStorage.getItem("happy"))
 //function for api fetch current weather 
 //TODO: Need to find a way to not display undefined and let user search again and run function again
 async function currentWeather(location) {
     var url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=f1a4bc7f4aa2985eed033f1669d8e977&units=imperial`;
     var response = await fetch(url)
     var data = await response.json();
-    console.log (data)
+    console.log (response.ok)
+
+    if (response.ok === false) {
+      alert("Please enter valid city");
+      return
+    }
     
     // posting what the city that the user inputted
     var h2El = document.createElement('h2')
@@ -35,12 +42,11 @@ async function currentWeather(location) {
   var lon = data.coord.lon;
   var lat = data.coord.lat;
   uv();
-  fiveDayForecast();
 //   console.log(lon)
 //   console.log(lat)
 //use one call api for UV index
   async function uv() {
-      var uvUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=f1a4bc7f4aa2985eed033f1669d8e977`
+      var uvUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=f1a4bc7f4aa2985eed033f1669d8e977&units=imperial`
       var response2 = await fetch(uvUrl);
       var data2 = await response2.json();
     //   console.log(data2)
@@ -48,39 +54,53 @@ async function currentWeather(location) {
       var uvEl = document.createElement('p')
       uvEl.innerHTML = `UV Index: ${data2.current.uvi}`
       stateBoxEl.appendChild(uvEl)
+      fiveDayForecast(data2)
   }
-  // TODO: need function for 5 day - stuck on how to display date
-async function fiveDayForecast() {
-    var fiveDayUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=f1a4bc7f4aa2985eed033f1669d8e977`
-    var response3 = await fetch(fiveDayUrl);
-    var data3 = await response3.json();
-    console.log("****",data3)
-    
-    //Need to grab unix time and convert it to 00/00/0000 format
-    var date = data3.daily
-    for (let i = 0; i < 5 && i < date.length; i++) {
-        var time = date[i];
-        console.log(time)
-        var unixTime = time.dt
-        console.log(unixTime)
-        var milliseconds = unixTime * 1000
-        console.log(milliseconds)
-        var dateObject = new Date(milliseconds)
-        console.log(dateObject)
-        var humanDateFormat = dateObject.toLocaleDateString()
-        console.log(humanDateFormat)
 
-    //now to append dates as a list on HTML
-    var fiveDays = document.createElement('p')
-    fiveDays.innerHTML = `${humanDateFormat}`
-    forecast.appendChild(fiveDays)
-
-    }
-}
   // need a function to clear old results on page and put new results in place of it
   Btn.addEventListener('click', function () {
     stateBoxEl.innerHTML = '';
 })
+}
+
+function fiveDayForecast(data3) {
+  // var fiveDayUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=f1a4bc7f4aa2985eed033f1669d8e977`
+  // var response3 = await fetch(fiveDayUrl);
+  // var data3 = await response3.json();
+  // console.log("****",data3)
+  
+  //Need to grab unix time and convert it to 00/00/0000 format
+  var date = data3.daily
+  for (let i = 0; i < 5 && i < date.length; i++) {
+      var time = date[i];
+      console.log(time)
+      var unixTime = time.dt
+      console.log(unixTime)
+      var milliseconds = unixTime * 1000
+      console.log(milliseconds)
+      var dateObject = new Date(milliseconds)
+      console.log(dateObject)
+      var humanDateFormat = dateObject.toLocaleDateString()
+      console.log(humanDateFormat)
+
+  //now to append dates as a list on HTML
+  var fiveDays = document.createElement('p')
+  fiveDays.innerHTML = `${humanDateFormat}`
+  forecast.appendChild(fiveDays)
+   
+  console.log(date[i].temp.day)
+  var temp2El = document.createElement('p')
+  temp2El.innerHTML = `Temp: ${date[i].temp.day}°F`
+  forecast.appendChild(temp2El)
+  
+  var wind2El = document.createElement('p')
+  wind2El.innerHTML = `Wind: ${date[i].wind_speed} MPH`
+  forecast.appendChild(wind2El)
+  
+  var humidity2El = document.createElement('p')
+  humidity2El.innerHTML = `Humidity: ${date[i].humidity} %`
+  forecast.appendChild(humidity2El)
+  }
 }
 
 
